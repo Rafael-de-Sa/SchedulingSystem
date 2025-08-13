@@ -14,6 +14,8 @@ public class MainView extends javax.swing.JFrame {
      * Creates new form MainView
      */
     public MainView() {
+        java.util.Locale.setDefault(new java.util.Locale("pt", "BR"));
+        
         javax.swing.UIManager.put("OptionPane.yesButtonText", "Sim");
         javax.swing.UIManager.put("OptionPane.noButtonText", "Não");
         javax.swing.UIManager.put("OptionPane.cancelButtonText", "Cancelar");
