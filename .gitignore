@@ -1,0 +1,37 @@
+
+# ===== Arquivos do NetBeans =====
+/nbproject/private/
+/build/
+/dist/
+/nbbuild/
+/nbdist/
+/nbactions.xml
+/nb-configuration.xml
+
+# ===== Arquivos de Compilação =====
+/target/
+/out/
+/bin/
+
+# ===== Logs e temporários =====
+*.log
+*.tmp
+*.temp
+
+# ===== Arquivos do sistema operacional =====
+.DS_Store
+Thumbs.db
+
+# ===== Configurações do IDE =====
+*.iml
+.idea/
+.vscode/
+
+# ===== Arquivos Maven =====
+.mvn/wrapper/maven-wrapper.jar
+!/.mvn/wrapper/maven-wrapper.properties
+
+# ===== Arquivos de backup do editor =====
+*~
+*.bak
+*.swp

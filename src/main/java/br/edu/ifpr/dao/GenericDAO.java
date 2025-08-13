@@ -57,7 +57,7 @@ public class GenericDAO<PK, T> {
 
     public List<T> findAll() {
         List<T> entities = em.createQuery("FROM " + getTypeClass()
-                .getName())
+                .getSimpleName())
                 .getResultList();
         return entities;
     }
