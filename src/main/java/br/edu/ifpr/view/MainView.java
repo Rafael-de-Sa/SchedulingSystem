@@ -15,12 +15,12 @@ public class MainView extends javax.swing.JFrame {
      */
     public MainView() {
         java.util.Locale.setDefault(new java.util.Locale("pt", "BR"));
-        
+
         javax.swing.UIManager.put("OptionPane.yesButtonText", "Sim");
         javax.swing.UIManager.put("OptionPane.noButtonText", "Não");
         javax.swing.UIManager.put("OptionPane.cancelButtonText", "Cancelar");
         javax.swing.UIManager.put("OptionPane.okButtonText", "OK");
-        
+
         initComponents();
     }
 
@@ -67,6 +67,11 @@ public class MainView extends javax.swing.JFrame {
         mRegister.add(mIVehicleRegister);
 
         mIServiceRegister.setText("Serviço");
+        mIServiceRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mIServiceRegisterActionPerformed(evt);
+            }
+        });
         mRegister.add(mIServiceRegister);
 
         mISchedulingRegister.setText("Agendamento");
@@ -126,9 +131,16 @@ public class MainView extends javax.swing.JFrame {
 
         RegisterWorkshop rwdlg = new RegisterWorkshop(this, true);
         rwdlg.setVisible(true);
-        
+
 
     }//GEN-LAST:event_mIWorkshopRegisterActionPerformed
+
+    private void mIServiceRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mIServiceRegisterActionPerformed
+        // TODO add your handling code here:
+
+        RegisterService rsdlg = new RegisterService(this, true);
+        rsdlg.setVisible(true);
+    }//GEN-LAST:event_mIServiceRegisterActionPerformed
 
     /**
      * @param args the command line arguments

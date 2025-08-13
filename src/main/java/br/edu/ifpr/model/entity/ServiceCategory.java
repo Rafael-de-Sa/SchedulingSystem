@@ -9,5 +9,25 @@ package br.edu.ifpr.model.entity;
  * @author rafae
  */
 public enum ServiceCategory {
-    MECANICA, ELETRICA, TROCA_OLEO, REVISAO, ALINHAMENTO, BALANCEAMENTO
+    MECANICA("Mecânica"),
+    ELETRICA("Elétrica"),
+    TROCA_OLEO("Troca de óleo"),
+    REVISAO("Revisão"),
+    ALINHAMENTO("Alinhamento"),
+    BALANCEAMENTO("Balanceamento");
+
+    private final String label;
+
+    ServiceCategory(String label) {
+        this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    @Override
+    public String toString() {
+        return label;
+    } // <-- o combo usará isso
 }
