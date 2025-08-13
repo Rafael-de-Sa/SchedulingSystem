@@ -28,9 +28,9 @@ public class RegisterVehicle extends javax.swing.JDialog {
     private void initComponents() {
 
         lLicensePlate = new javax.swing.JLabel();
-        tfLicencePlate = new javax.swing.JTextField();
+        tfLicensePlate = new javax.swing.JTextField();
         lModel = new javax.swing.JLabel();
-        ftModel = new javax.swing.JTextField();
+        tfModel = new javax.swing.JTextField();
         btnRegister = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
 
@@ -42,8 +42,18 @@ public class RegisterVehicle extends javax.swing.JDialog {
         lModel.setText("Modelo:");
 
         btnRegister.setText("Salvar");
+        btnRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegisterActionPerformed(evt);
+            }
+        });
 
         btnCancel.setText("Cancelar");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -55,11 +65,11 @@ public class RegisterVehicle extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lLicensePlate, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfLicencePlate, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfLicensePlate, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lModel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ftModel, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfModel, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -73,9 +83,9 @@ public class RegisterVehicle extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lLicensePlate)
-                    .addComponent(tfLicencePlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfLicensePlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lModel)
-                    .addComponent(ftModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegister)
@@ -86,6 +96,19 @@ public class RegisterVehicle extends javax.swing.JDialog {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+        // TODO add your handling code here:
+        String plate = tfLicensePlate.getText();
+        String model = tfModel.getText();
+
+
+    }//GEN-LAST:event_btnRegisterActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -129,12 +152,18 @@ public class RegisterVehicle extends javax.swing.JDialog {
         });
     }
 
+    private void clearForm() {
+        tfModel.setText("");
+        tfLicensePlate.setText("");
+        tfModel.requestFocus();
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnRegister;
-    private javax.swing.JTextField ftModel;
     private javax.swing.JLabel lLicensePlate;
     private javax.swing.JLabel lModel;
-    private javax.swing.JTextField tfLicencePlate;
+    private javax.swing.JTextField tfLicensePlate;
+    private javax.swing.JTextField tfModel;
     // End of variables declaration//GEN-END:variables
 }

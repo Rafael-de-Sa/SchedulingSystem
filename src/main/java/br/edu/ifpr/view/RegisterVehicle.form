@@ -30,11 +30,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="lLicensePlate" min="-2" pref="37" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tfLicencePlate" min="-2" pref="118" max="-2" attributes="0"/>
+                      <Component id="tfLicensePlate" min="-2" pref="118" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="lModel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="ftModel" min="-2" pref="155" max="-2" attributes="0"/>
+                      <Component id="tfModel" min="-2" pref="155" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
@@ -53,9 +53,9 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="lLicensePlate" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tfLicencePlate" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfLicensePlate" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="lModel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ftModel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfModel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -73,24 +73,30 @@
         <Property name="text" type="java.lang.String" value="Placa:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="tfLicencePlate">
+    <Component class="javax.swing.JTextField" name="tfLicensePlate">
     </Component>
     <Component class="javax.swing.JLabel" name="lModel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Modelo:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="ftModel">
+    <Component class="javax.swing.JTextField" name="tfModel">
     </Component>
     <Component class="javax.swing.JButton" name="btnRegister">
       <Properties>
         <Property name="text" type="java.lang.String" value="Salvar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRegisterActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnCancel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Cancelar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

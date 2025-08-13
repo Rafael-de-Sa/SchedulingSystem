@@ -20,7 +20,7 @@ public class MainView extends javax.swing.JFrame {
         javax.swing.UIManager.put("OptionPane.noButtonText", "Não");
         javax.swing.UIManager.put("OptionPane.cancelButtonText", "Cancelar");
         javax.swing.UIManager.put("OptionPane.okButtonText", "OK");
-
+        
         initComponents();
     }
 
@@ -113,6 +113,8 @@ public class MainView extends javax.swing.JFrame {
 
     private void mIVehicleRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mIVehicleRegisterActionPerformed
         // TODO add your handling code here:
+        RegisterVehicle rvdlg = new RegisterVehicle(this, true);
+        rvdlg.setVisible(true);
     }//GEN-LAST:event_mIVehicleRegisterActionPerformed
 
     private void mIServiceConsultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mIServiceConsultActionPerformed
@@ -124,7 +126,7 @@ public class MainView extends javax.swing.JFrame {
 
         RegisterWorkshop rwdlg = new RegisterWorkshop(this, true);
         rwdlg.setVisible(true);
-
+        
 
     }//GEN-LAST:event_mIWorkshopRegisterActionPerformed
 
