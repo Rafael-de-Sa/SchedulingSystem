@@ -61,4 +61,13 @@ public class GenericDAO<PK, T> {
                 .getResultList();
         return entities;
     }
+
+    public void close() {
+        try {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        } catch (Exception ignore) {
+        }
+    }
 }
