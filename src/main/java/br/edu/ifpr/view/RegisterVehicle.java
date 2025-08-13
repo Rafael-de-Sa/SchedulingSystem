@@ -4,16 +4,23 @@
  */
 package br.edu.ifpr.view;
 
+import br.edu.ifpr.controller.ValidationException;
+import br.edu.ifpr.controller.VehicleController;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author rafae
  */
 public class RegisterVehicle extends javax.swing.JDialog {
 
+    private final VehicleController controller = new VehicleController();
+
     /**
      * Creates new form RegisterVehicle
      */
     public RegisterVehicle(java.awt.Frame parent, boolean modal) {
+
         super(parent, modal);
         initComponents();
     }
@@ -102,6 +109,30 @@ public class RegisterVehicle extends javax.swing.JDialog {
         String plate = tfLicensePlate.getText();
         String model = tfModel.getText();
 
+        try {
+            var saved = controller.create(plate, model);
+
+            int opt = JOptionPane.showConfirmDialog(
+                    this,
+                    "Veículo salvo com sucesso (id: " + saved.getId() + ").\nDeseja cadastrar outro?",
+                    "Sucesso",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            if (opt == JOptionPane.YES_OPTION) {
+                clearForm();
+            } else {
+                dispose();
+            }
+
+        } catch (ValidationException ve) {
+            JOptionPane.showMessageDialog(this, ve.getMessage(),
+                    "Validação", JOptionPane.WARNING_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar: " + ex.getMessage(),
+                    "Erro", JOptionPane.ERROR_MESSAGE);
+        }
 
     }//GEN-LAST:event_btnRegisterActionPerformed
 
