@@ -4,12 +4,24 @@
  */
 package br.edu.ifpr.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 /**
  *
  * @author Aluno
  */
+@Entity
+@Table(name = "vehicles", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "license_plate")})
 public class Vehicle {
 
     @Id
@@ -17,10 +29,13 @@ public class Vehicle {
     private int id;
 
     @Basic
-    @Column(length = 8, nullable = false)
+    @NotBlank
+    @Pattern(regexp = "^([A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z0-9][0-9]{2})$")
+    @Column(name = "license_plate", length = 8, nullable = false)
     private String licensePlate;
 
     @Basic
+    @NotBlank
     @Column(length = 30, nullable = false)
     private String model;
 

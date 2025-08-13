@@ -4,12 +4,22 @@
  */
 package br.edu.ifpr.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  *
  * @author Aluno
  */
+@Entity
+@Table(name = "workshops")
 public class Workshop {
 
     @Id
@@ -17,11 +27,13 @@ public class Workshop {
     private int id;
 
     @Basic
+    @NotBlank
     @Column(length = 50, nullable = false)
     private String name;
 
     @Basic
-    @Column(nullable = false)
+    @Min(1)
+    @Column(name = "vacancies_day", nullable = false)
     private int vacanciesDay;
 
     public Workshop() {

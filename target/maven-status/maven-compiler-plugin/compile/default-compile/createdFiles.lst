@@ -1,0 +1,5 @@
+br\edu\ifpr\model\entity\Workshop.class
+br\edu\ifpr\model\entity\Service.class
+br\edu\ifpr\SchedulingSystem.class
+br\edu\ifpr\model\entity\Vehicle.class
+br\edu\ifpr\model\entity\Scheduling.class
