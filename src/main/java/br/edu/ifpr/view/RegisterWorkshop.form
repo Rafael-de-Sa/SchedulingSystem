@@ -49,7 +49,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnDelete" linkSize="3" min="-2" pref="95" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnExit" linkSize="3" min="-2" pref="95" max="-2" attributes="0"/>
+                              <Component id="btnCancel" linkSize="3" min="-2" pref="95" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Component id="lId" min="-2" max="-2" attributes="0"/>
@@ -82,7 +82,7 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnRegister" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnExit" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnCancel" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnEdit" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnSave" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnDelete" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -103,12 +103,13 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRegisterActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnExit">
+    <Component class="javax.swing.JButton" name="btnCancel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Sair"/>
+        <Property name="text" type="java.lang.String" value="Cancelar"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExitActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lName">
@@ -161,6 +162,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Excluir"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="spWorkshop">
 

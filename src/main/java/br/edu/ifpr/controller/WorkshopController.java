@@ -85,23 +85,23 @@ public class WorkshopController {
             w.setName(name.trim());
             w.setVacanciesDay(vacanciesDay);
             dao.update(w);
+            workshopTableModel.updateRow(w);
             return w;
         } finally {
             dao.close();
         }
     }
 
-    public void delete(Integer id) {
-        if (id == null) {
-            throw new ValidationException("ID inválido para exclusão.");
-        }
+    public void delete(Integer row) {
+        Workshop workshop = workshopTableModel.get(row);
         WorkshopDAO dao = new WorkshopDAO();
+
         try {
-            Workshop w = dao.retrieve(id);
-            if (w == null) {
+            if (workshop == null) {
                 throw new ValidationException("Oficina não encontrada.");
             }
-            dao.delete(w);
+            dao.delete(workshop);
+            workshopTableModel.remove(row);
         } finally {
             dao.close();
         }

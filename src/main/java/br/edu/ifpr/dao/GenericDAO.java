@@ -51,7 +51,8 @@ public class GenericDAO<PK, T> {
 
     public void delete(T entity) {
         em.getTransaction().begin();
-        em.remove(entity);
+        T managed = em.contains(entity) ? entity : em.merge(entity);
+        em.remove(managed);
         em.getTransaction().commit();
     }
 

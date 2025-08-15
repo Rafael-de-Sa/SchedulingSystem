@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
  * @author rafae
  */
 public class RegisterWorkshop extends javax.swing.JDialog {
-    
+
     private WorkshopTableModel workshopTableModel = new WorkshopTableModel();
     private WorkshopController controller = new WorkshopController(workshopTableModel);
 
@@ -26,7 +26,7 @@ public class RegisterWorkshop extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         tbWorkshop.setModel(workshopTableModel);
-        
+
         workshopTableModel.setData(controller.findAll());
     }
 
@@ -40,7 +40,7 @@ public class RegisterWorkshop extends javax.swing.JDialog {
     private void initComponents() {
 
         btnRegister = new javax.swing.JButton();
-        btnExit = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
         lName = new javax.swing.JLabel();
         tfName = new javax.swing.JTextField();
         lVacanciesDay = new javax.swing.JLabel();
@@ -64,10 +64,11 @@ public class RegisterWorkshop extends javax.swing.JDialog {
             }
         });
 
-        btnExit.setText("Sair");
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
+        btnCancel.setText("Cancelar");
+        btnCancel.setEnabled(false);
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
+                btnCancelActionPerformed(evt);
             }
         });
 
@@ -97,6 +98,11 @@ public class RegisterWorkshop extends javax.swing.JDialog {
         });
 
         btnDelete.setText("Excluir");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         tbWorkshop.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -138,7 +144,7 @@ public class RegisterWorkshop extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lId)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -147,7 +153,7 @@ public class RegisterWorkshop extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnDelete, btnEdit, btnExit, btnRegister, btnSave});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCancel, btnDelete, btnEdit, btnRegister, btnSave});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -165,7 +171,7 @@ public class RegisterWorkshop extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegister)
-                    .addComponent(btnExit)
+                    .addComponent(btnCancel)
                     .addComponent(btnEdit)
                     .addComponent(btnSave)
                     .addComponent(btnDelete))
@@ -174,40 +180,33 @@ public class RegisterWorkshop extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnDelete, btnEdit, btnExit, btnRegister, btnSave});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCancel, btnDelete, btnEdit, btnRegister, btnSave});
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        // TODO add your handling code here:
-        dispose();
-    }//GEN-LAST:event_btnExitActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        clearForm();
+        setEditing(false);
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         // TODO add your handling code here:
-        String name = tfName.getText();
+        String name = tfName.getText().trim().replaceAll("\\s+", " ");
         int vacancies = (Integer) sVacanciesDay.getValue();
-        
+
         try {
             var saved = controller.create(name, vacancies);
 
-            // mensagem de sucesso
-            int opt = JOptionPane.showConfirmDialog(
-                    this,
-                    "Oficina salva com sucesso (id: " + saved.getId() + ").\nDeseja cadastrar outra?",
-                    "Sucesso",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-            
-            if (opt == JOptionPane.YES_OPTION) {
+            if (saved != null) {
+                JOptionPane.showMessageDialog(this, "Oficina salva com sucesso (id: " + saved.getId() + ")");
                 clearForm();
+                workshopTableModel.add(saved);
             } else {
-                dispose();
+                JOptionPane.showMessageDialog(this, "Erro ao cadastrar Oficina", "Erro", JOptionPane.ERROR_MESSAGE);
             }
-            
+
         } catch (ValidationException ve) {
             JOptionPane.showMessageDialog(this, ve.getMessage(), "Validação", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
@@ -216,7 +215,20 @@ public class RegisterWorkshop extends javax.swing.JDialog {
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // TODO add your handling code here:
+        Integer id = Integer.parseInt(tfId.getText());
+        String name = tfName.getText().trim().replaceAll("\\s+", " ");
+        Integer vacancies = (Integer) sVacanciesDay.getValue();
+
+        Workshop workshopUpdated = controller.update(id, name, vacancies);
+
+        if (workshopUpdated != null) {
+            JOptionPane.showMessageDialog(this, "Oficina atualizada!");
+            clearForm();
+            setEditing(false);
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
@@ -230,6 +242,27 @@ public class RegisterWorkshop extends javax.swing.JDialog {
             setEditing(true);
         }
     }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int row = tbWorkshop.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Nenhuma linha selecionada");
+        } else {
+
+            int opt = JOptionPane.showConfirmDialog(
+                    this,
+                    "Tem certeza que deseja excluir esta oficina?",
+                    "Confirmar exclusão",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (opt == JOptionPane.YES_OPTION) {
+                controller.delete(row);
+            }
+        }
+
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -272,25 +305,26 @@ public class RegisterWorkshop extends javax.swing.JDialog {
             }
         });
     }
-    
+
     private void clearForm() {
         tfId.setText("");
         tfName.setText("");
         sVacanciesDay.setValue(1);
         tfName.requestFocus();
     }
-    
+
     private void setEditing(boolean editing) {
         btnSave.setEnabled(editing);
         btnDelete.setEnabled(!editing);
         btnRegister.setEnabled(!editing);
+        btnCancel.setEnabled(editing);
         tfName.requestFocus();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
-    private javax.swing.JButton btnExit;
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnSave;
     private javax.swing.JLabel lId;
