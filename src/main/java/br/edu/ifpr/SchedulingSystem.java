@@ -11,6 +11,7 @@ import br.edu.ifpr.dao.WorkshopDAO;
 
 import br.edu.ifpr.model.entity.Service;
 import br.edu.ifpr.model.entity.Scheduling;
+import br.edu.ifpr.model.entity.ServiceCategory;
 import br.edu.ifpr.model.entity.Vehicle;
 import br.edu.ifpr.model.entity.Workshop;
 
@@ -19,7 +20,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-
 /**
  *
  * @author Aluno
@@ -27,7 +27,6 @@ import java.util.List;
 public class SchedulingSystem {
 
     public static void main(String[] args) {
-        // DAOs (seu padrão)
         WorkshopDAO workshopDAO = new WorkshopDAO();
         VehicleDAO vehicleDAO = new VehicleDAO();
         ServiceDAO serviceDAO = new ServiceDAO();
@@ -53,7 +52,7 @@ public class SchedulingSystem {
 
             System.out.println("\n== Iniciando CRUD de Vehicle ==");
             Vehicle v = new Vehicle();
-            v.setLicensePlate("ABC1D23"); // Ajuste se sua validação aceitar outro formato
+            v.setLicensePlate("ABC1D23");
             v.setModel("Gol 1.0");
             vehicleDAO.create(v);
             System.out.println("Vehicle criado com id: " + v.getId());
@@ -71,8 +70,9 @@ public class SchedulingSystem {
             System.out.println("\n== Iniciando CRUD de Service ==");
             Service s = new Service();
             s.setDescription("Troca de óleo");
-            s.setDurationMin(60); // dentro da regra (<= 240)
-            // se você tiver enum category e for obrigatório, set aqui: s.setCategory(ServiceCategory.TROCA_OLEO);
+            s.setDurationMin(60);
+            s.setCategory(ServiceCategory.TROCA_OLEO);
+
             serviceDAO.create(s);
             System.out.println("Service criado com id: " + s.getId());
 
@@ -92,19 +92,16 @@ public class SchedulingSystem {
             sch.setVehicle(vFound);
             sch.setService(sFound);
 
-            // agenda para o próximo dia útil às 10:00 (simples, sem validações de regra aqui)
             LocalDate nextBusinessDay = nextBusinessDay(LocalDate.now());
             LocalDateTime start = LocalDateTime.of(nextBusinessDay, LocalTime.of(10, 0));
             sch.setStartTime(start);
 
-            // endTime será calculado pelo @PrePersist/@PreUpdate no entity
             schedulingDAO.create(sch);
             System.out.println("Scheduling criado com id: " + sch.getId());
 
             Scheduling schFound = schedulingDAO.retrieve(sch.getId());
             System.out.println("Scheduling recuperado: start=" + schFound.getStartTime() + " | end=" + schFound.getEndTime());
 
-            // Atualiza para outro horário, só para exercitar o update + recomputar endTime
             schFound.setStartTime(start.plusHours(1));
             schedulingDAO.update(schFound);
             Scheduling schUpdated = schedulingDAO.retrieve(sch.getId());
@@ -113,7 +110,6 @@ public class SchedulingSystem {
             List<Scheduling> allSch = schedulingDAO.findAll();
             System.out.println("Total de schedulings: " + allSch.size());
 
-            // Delete de teste (opcional): descomente se quiser ver funcionamento completo
             // schedulingDAO.delete(schUpdated);
             // serviceDAO.delete(sFound);
             // vehicleDAO.delete(vFound);
@@ -123,19 +119,13 @@ public class SchedulingSystem {
             System.err.println("Falha no teste: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            // Se o seu GenericDAO mantém um EntityManager aberto,
-            // feche as instâncias aqui (se você tiver um método close() no DAO).
-            // Exemplo:
-            // workshopDAO.close();
-            // vehicleDAO.close();
-            // serviceDAO.close();
-            // schedulingDAO.close();
+            workshopDAO.close();
+            vehicleDAO.close();
+            serviceDAO.close();
+            schedulingDAO.close();
         }
     }
 
-    /**
-     * Retorna o próximo dia útil (seg-sex).
-     */
     private static LocalDate nextBusinessDay(LocalDate d) {
         LocalDate date = d.plusDays(1);
         switch (date.getDayOfWeek()) {
@@ -147,4 +137,3 @@ public class SchedulingSystem {
         return date;
     }
 }
-

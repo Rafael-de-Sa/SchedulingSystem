@@ -39,11 +39,6 @@ public class MainView extends javax.swing.JFrame {
         mIVehicleRegister = new javax.swing.JMenuItem();
         mIServiceRegister = new javax.swing.JMenuItem();
         mISchedulingRegister = new javax.swing.JMenuItem();
-        mConsult = new javax.swing.JMenu();
-        mIWorkshopConsult = new javax.swing.JMenuItem();
-        mIVehicleConsult = new javax.swing.JMenuItem();
-        mIServiceConsult = new javax.swing.JMenuItem();
-        mISchedulingConsult = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema de Agendamento - Oficina");
@@ -84,27 +79,6 @@ public class MainView extends javax.swing.JFrame {
 
         mbMenu.add(mRegister);
 
-        mConsult.setText("Consultar");
-
-        mIWorkshopConsult.setText("Oficinas");
-        mConsult.add(mIWorkshopConsult);
-
-        mIVehicleConsult.setText("Veículos");
-        mConsult.add(mIVehicleConsult);
-
-        mIServiceConsult.setText("Serviços");
-        mIServiceConsult.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mIServiceConsultActionPerformed(evt);
-            }
-        });
-        mConsult.add(mIServiceConsult);
-
-        mISchedulingConsult.setText("Agendamentos");
-        mConsult.add(mISchedulingConsult);
-
-        mbMenu.add(mConsult);
-
         setJMenuBar(mbMenu);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -126,10 +100,6 @@ public class MainView extends javax.swing.JFrame {
         RegisterVehicle rvdlg = new RegisterVehicle(this, true);
         rvdlg.setVisible(true);
     }//GEN-LAST:event_mIVehicleRegisterActionPerformed
-
-    private void mIServiceConsultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mIServiceConsultActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_mIServiceConsultActionPerformed
 
     private void mIWorkshopRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mIWorkshopRegisterActionPerformed
         // TODO add your handling code here:
@@ -189,14 +159,9 @@ public class MainView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu mConsult;
-    private javax.swing.JMenuItem mISchedulingConsult;
     private javax.swing.JMenuItem mISchedulingRegister;
-    private javax.swing.JMenuItem mIServiceConsult;
     private javax.swing.JMenuItem mIServiceRegister;
-    private javax.swing.JMenuItem mIVehicleConsult;
     private javax.swing.JMenuItem mIVehicleRegister;
-    private javax.swing.JMenuItem mIWorkshopConsult;
     private javax.swing.JMenuItem mIWorkshopRegister;
     private javax.swing.JMenu mRegister;
     private javax.swing.JMenuBar mbMenu;

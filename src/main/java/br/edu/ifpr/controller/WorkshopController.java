@@ -6,6 +6,7 @@ package br.edu.ifpr.controller;
 
 import br.edu.ifpr.dao.WorkshopDAO;
 import br.edu.ifpr.model.entity.Workshop;
+import br.edu.ifpr.view.tablemodel.WorkshopTableModel;
 import java.util.List;
 
 /**
@@ -13,6 +14,15 @@ import java.util.List;
  * @author rafae
  */
 public class WorkshopController {
+
+    private WorkshopTableModel workshopTableModel;
+
+    public WorkshopController() {
+    }
+
+    public WorkshopController(WorkshopTableModel workshopTableModel) {
+        this.workshopTableModel = workshopTableModel;
+    }
 
     private void validate(String name, Integer vacancies, Integer editingId) {
         if (name == null || name.trim().isEmpty()) {
@@ -116,6 +126,10 @@ public class WorkshopController {
         } finally {
             dao.close();
         }
+    }
+
+    public Workshop workshopRetrieve(Integer row) {
+        return workshopTableModel.get(row);
     }
 
 }

@@ -6,6 +6,8 @@ package br.edu.ifpr.view;
 
 import br.edu.ifpr.controller.ValidationException;
 import br.edu.ifpr.controller.WorkshopController;
+import br.edu.ifpr.model.entity.Workshop;
+import br.edu.ifpr.view.tablemodel.WorkshopTableModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,8 +15,9 @@ import javax.swing.JOptionPane;
  * @author rafae
  */
 public class RegisterWorkshop extends javax.swing.JDialog {
-
-    private final WorkshopController controller = new WorkshopController();
+    
+    private WorkshopTableModel workshopTableModel = new WorkshopTableModel();
+    private WorkshopController controller = new WorkshopController(workshopTableModel);
 
     /**
      * Creates new form RegisterWorkshop
@@ -22,6 +25,9 @@ public class RegisterWorkshop extends javax.swing.JDialog {
     public RegisterWorkshop(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        tbWorkshop.setModel(workshopTableModel);
+        
+        workshopTableModel.setData(controller.findAll());
     }
 
     /**
@@ -34,26 +40,34 @@ public class RegisterWorkshop extends javax.swing.JDialog {
     private void initComponents() {
 
         btnRegister = new javax.swing.JButton();
-        btnCancel = new javax.swing.JButton();
+        btnExit = new javax.swing.JButton();
         lName = new javax.swing.JLabel();
         tfName = new javax.swing.JTextField();
         lVacanciesDay = new javax.swing.JLabel();
         sVacanciesDay = new javax.swing.JSpinner();
+        lId = new javax.swing.JLabel();
+        tfId = new javax.swing.JTextField();
+        btnEdit = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        spWorkshop = new javax.swing.JScrollPane();
+        tbWorkshop = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastrar Oficina");
+        setResizable(false);
 
-        btnRegister.setText("Salvar");
+        btnRegister.setText("Cadastrar");
         btnRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegisterActionPerformed(evt);
             }
         });
 
-        btnCancel.setText("Cancelar");
-        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+        btnExit.setText("Sair");
+        btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelActionPerformed(evt);
+                btnExitActionPerformed(evt);
             }
         });
 
@@ -63,6 +77,40 @@ public class RegisterWorkshop extends javax.swing.JDialog {
 
         sVacanciesDay.setModel(new javax.swing.SpinnerNumberModel(1,1,Integer.MAX_VALUE,1));
 
+        lId.setText("ID:");
+
+        tfId.setEnabled(false);
+
+        btnEdit.setText("Editar");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
+
+        btnSave.setText("Salvar");
+        btnSave.setEnabled(false);
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
+        btnDelete.setText("Excluir");
+
+        tbWorkshop.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        spWorkshop.setViewportView(tbWorkshop);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -70,24 +118,45 @@ public class RegisterWorkshop extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(spWorkshop)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lName, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lName)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lVacanciesDay, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lVacanciesDay, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sVacanciesDay, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
+                        .addComponent(sVacanciesDay, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnCancel)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lId)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnDelete, btnEdit, btnExit, btnRegister, btnSave});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lId)
+                    .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lName)
                     .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -96,24 +165,31 @@ public class RegisterWorkshop extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegister)
-                    .addComponent(btnCancel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnExit)
+                    .addComponent(btnEdit)
+                    .addComponent(btnSave)
+                    .addComponent(btnDelete))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(spWorkshop, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnDelete, btnEdit, btnExit, btnRegister, btnSave});
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         // TODO add your handling code here:
         dispose();
-    }//GEN-LAST:event_btnCancelActionPerformed
+    }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         // TODO add your handling code here:
         String name = tfName.getText();
         int vacancies = (Integer) sVacanciesDay.getValue();
-
+        
         try {
             var saved = controller.create(name, vacancies);
 
@@ -125,19 +201,35 @@ public class RegisterWorkshop extends javax.swing.JDialog {
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.INFORMATION_MESSAGE
             );
-
+            
             if (opt == JOptionPane.YES_OPTION) {
                 clearForm();
             } else {
                 dispose();
             }
-
+            
         } catch (ValidationException ve) {
             JOptionPane.showMessageDialog(this, ve.getMessage(), "Validação", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro ao salvar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        if (tbWorkshop.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(null, "Nenhuma linha selecionada!");
+        } else {
+            Workshop workshop = controller.workshopRetrieve(tbWorkshop.getSelectedRow());
+            this.tfId.setText(String.valueOf(workshop.getId()));
+            this.tfName.setText(workshop.getName());
+            this.sVacanciesDay.setValue(workshop.getVacanciesDay());
+            setEditing(true);
+        }
+    }//GEN-LAST:event_btnEditActionPerformed
 
     /**
      * @param args the command line arguments
@@ -180,19 +272,34 @@ public class RegisterWorkshop extends javax.swing.JDialog {
             }
         });
     }
-
+    
     private void clearForm() {
+        tfId.setText("");
         tfName.setText("");
         sVacanciesDay.setValue(1);
         tfName.requestFocus();
     }
+    
+    private void setEditing(boolean editing) {
+        btnSave.setEnabled(editing);
+        btnDelete.setEnabled(!editing);
+        btnRegister.setEnabled(!editing);
+        tfName.requestFocus();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnExit;
     private javax.swing.JButton btnRegister;
+    private javax.swing.JButton btnSave;
+    private javax.swing.JLabel lId;
     private javax.swing.JLabel lName;
     private javax.swing.JLabel lVacanciesDay;
     private javax.swing.JSpinner sVacanciesDay;
+    private javax.swing.JScrollPane spWorkshop;
+    private javax.swing.JTable tbWorkshop;
+    private javax.swing.JTextField tfId;
     private javax.swing.JTextField tfName;
     // End of variables declaration//GEN-END:variables
 }
