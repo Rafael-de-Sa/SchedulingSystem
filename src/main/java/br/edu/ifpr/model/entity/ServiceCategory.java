@@ -29,5 +29,5 @@ public enum ServiceCategory {
     @Override
     public String toString() {
         return label;
-    } // <-- o combo usará isso
+    } 
 }

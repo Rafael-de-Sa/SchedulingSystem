@@ -57,6 +57,7 @@ public class RegisterVehicle extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Veículo");
+        setResizable(false);
 
         lLicensePlate.setText("Placa:");
 
@@ -312,6 +313,7 @@ public class RegisterVehicle extends javax.swing.JDialog {
     }
 
     private void clearForm() {
+        tfId.setText("");
         tfModel.setText("");
         tfLicensePlate.setText("");
         tfLicensePlate.requestFocus();

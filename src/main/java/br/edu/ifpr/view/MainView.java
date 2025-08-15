@@ -42,6 +42,7 @@ public class MainView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema de Agendamento - Oficina");
+        setResizable(false);
 
         mRegister.setText("Cadastrar");
 
@@ -93,6 +94,7 @@ public class MainView extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void mIVehicleRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mIVehicleRegisterActionPerformed

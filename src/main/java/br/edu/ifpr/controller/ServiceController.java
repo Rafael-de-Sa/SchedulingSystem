@@ -7,6 +7,7 @@ package br.edu.ifpr.controller;
 import br.edu.ifpr.dao.ServiceDAO;
 import br.edu.ifpr.model.entity.Service;
 import br.edu.ifpr.model.entity.ServiceCategory;
+import br.edu.ifpr.view.tablemodel.ServiceTableModel;
 import java.util.List;
 
 /**
@@ -14,10 +15,16 @@ import java.util.List;
  * @author rafae
  */
 public class ServiceController {
-
+    
+    private ServiceTableModel serviceTableModel;
+    
+    public ServiceController(ServiceTableModel serviceTableModel) {
+        this.serviceTableModel = serviceTableModel;
+    }
+    
     private static final int MIN_DURATION = 1;
     private static final int MAX_DURATION = 240;
-
+    
     private void validate(String description, Integer durationMin, ServiceCategory category) {
         if (description == null || description.trim().isEmpty()) {
             throw new ValidationException("Informe a descrição do serviço.");
@@ -32,14 +39,14 @@ public class ServiceController {
             throw new ValidationException("Selecione a categoria.");
         }
     }
-
+    
     public Service create(String description, Integer durationMin, ServiceCategory category) {
         validate(description, durationMin, category);
         Service s = new Service();
         s.setDescription(description.trim());
         s.setDurationMin(durationMin);
         s.setCategory(category);
-
+        
         ServiceDAO dao = new ServiceDAO();
         try {
             dao.create(s);
@@ -48,7 +55,7 @@ public class ServiceController {
             dao.close();
         }
     }
-
+    
     public Service update(Integer id, String description, Integer durationMin, ServiceCategory category) {
         if (id == null) {
             throw new ValidationException("ID inválido.");
@@ -64,28 +71,29 @@ public class ServiceController {
             s.setDurationMin(durationMin);
             s.setCategory(category);
             dao.update(s);
+            serviceTableModel.updateRow(s);
             return s;
         } finally {
             dao.close();
         }
     }
-
-    public void delete(Integer id) {
-        if (id == null) {
-            throw new ValidationException("ID inválido.");
-        }
+    
+    public void delete(Integer row) {
+        Service service = serviceTableModel.get(row);
         ServiceDAO dao = new ServiceDAO();
+        
         try {
-            Service s = dao.retrieve(id);
-            if (s == null) {
-                throw new ValidationException("Serviço não encontrado.");
+            if (service == null) {
+                throw new ValidationException("Oficina não encontrada.");
             }
-            dao.delete(s);
+            dao.delete(service);
+            serviceTableModel.remove(row);
         } finally {
             dao.close();
         }
+        
     }
-
+    
     public Service findById(Integer id) {
         if (id == null) {
             return null;
@@ -97,7 +105,7 @@ public class ServiceController {
             dao.close();
         }
     }
-
+    
     public List<Service> findAll() {
         ServiceDAO dao = new ServiceDAO();
         try {
@@ -105,5 +113,9 @@ public class ServiceController {
         } finally {
             dao.close();
         }
+    }
+    
+    public Service serviceRetrieve(Integer row) {
+        return serviceTableModel.get(row);
     }
 }

@@ -6,7 +6,9 @@ package br.edu.ifpr.view;
 
 import br.edu.ifpr.controller.ServiceController;
 import br.edu.ifpr.controller.ValidationException;
+import br.edu.ifpr.model.entity.Service;
 import br.edu.ifpr.model.entity.ServiceCategory;
+import br.edu.ifpr.view.tablemodel.ServiceTableModel;
 import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -17,7 +19,8 @@ import javax.swing.JOptionPane;
  */
 public class RegisterService extends javax.swing.JDialog {
 
-    private final ServiceController controller = new ServiceController();
+    private ServiceTableModel serviceTableModel = new ServiceTableModel();
+    private ServiceController controller = new ServiceController(serviceTableModel);
 
     /**
      * Creates new form RegisterService
@@ -30,6 +33,10 @@ public class RegisterService extends javax.swing.JDialog {
         cbCategory.setSelectedIndex(-1);
 
         sDuration.setModel(new javax.swing.SpinnerNumberModel(15, 1, 240, 1));
+
+        tbService.setModel(serviceTableModel);
+
+        serviceTableModel.setData(controller.findAll());
     }
 
     /**
@@ -42,7 +49,7 @@ public class RegisterService extends javax.swing.JDialog {
     private void initComponents() {
 
         btnRegister = new javax.swing.JButton();
-        btnExit = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
         lDescription = new javax.swing.JLabel();
         tfDescription = new javax.swing.JTextField();
         lVacanciesDay = new javax.swing.JLabel();
@@ -59,6 +66,7 @@ public class RegisterService extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastrar Serviço");
+        setResizable(false);
 
         btnRegister.setText("Cadastrar");
         btnRegister.addActionListener(new java.awt.event.ActionListener() {
@@ -67,10 +75,11 @@ public class RegisterService extends javax.swing.JDialog {
             }
         });
 
-        btnExit.setText("Sair");
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
+        btnCancel.setText("Cancelar");
+        btnCancel.setEnabled(false);
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
+                btnCancelActionPerformed(evt);
             }
         });
 
@@ -93,11 +102,26 @@ public class RegisterService extends javax.swing.JDialog {
         lId.setText("ID:");
 
         btnEdit.setText("Editar");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         btnSave.setText("Salvar");
         btnSave.setEnabled(false);
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnDelete.setText("Excluir");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         tbService.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -117,40 +141,41 @@ public class RegisterService extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(lId)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spService)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lDescription)
+                        .addComponent(lId)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfDescription))
+                        .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEdit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSave)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDelete)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExit))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lVacanciesDay)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lCategory)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbCategory, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lDescription)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(spService, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(tfDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(lVacanciesDay)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(sDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lCategory)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(cbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnEdit)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnSave)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnDelete)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnCancel))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnDelete, btnEdit, btnExit, btnRegister, btnSave});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCancel, btnDelete, btnEdit, btnRegister, btnSave});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,40 +200,32 @@ public class RegisterService extends javax.swing.JDialog {
                     .addComponent(btnEdit)
                     .addComponent(btnSave)
                     .addComponent(btnDelete)
-                    .addComponent(btnExit))
+                    .addComponent(btnCancel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(spService, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnDelete, btnEdit, btnExit, btnRegister, btnSave});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCancel, btnDelete, btnEdit, btnRegister, btnSave});
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-        // TODO add your handling code here:
-
-        String description = tfDescription.getText();
+        String description = tfDescription.getText().trim().replaceAll("\\s+", " ");
         Integer duration = (Integer) sDuration.getValue();
         ServiceCategory category = (ServiceCategory) cbCategory.getSelectedItem();
 
         try {
             var saved = controller.create(description, duration, category);
 
-            int opt = JOptionPane.showConfirmDialog(
-                    this,
-                    "Serviço salvo com sucesso (id: " + saved.getId() + ").\nDeseja cadastrar outro?",
-                    "Sucesso",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-
-            if (opt == JOptionPane.YES_OPTION) {
+            if (saved != null) {
+                JOptionPane.showMessageDialog(this, "Serviço sucesso (id: " + saved.getId() + ")");
                 clearForm();
+                serviceTableModel.add(saved);
             } else {
-                dispose();
+                JOptionPane.showMessageDialog(this, "Erro ao cadastrar Serviço", "Erro", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (ValidationException ve) {
@@ -220,14 +237,66 @@ public class RegisterService extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
 
-    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        // TODO add your handling code here:
-        dispose();
-    }//GEN-LAST:event_btnExitActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        clearForm();
+        setEditing(false);
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     private void cbCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoryActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbCategoryActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        if (tbService.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(null, "Nenhuma linha selecionada!");
+        } else {
+            Service service = controller.serviceRetrieve(tbService.getSelectedRow());
+
+            this.tfId.setText(String.valueOf(service.getId()));
+            this.tfDescription.setText(service.getDescription());
+            this.sDuration.setValue(service.getDurationMin());
+            this.cbCategory.setSelectedItem(service.getCategory());
+            setEditing(true);
+
+        }
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        Integer id = Integer.parseInt(tfId.getText());
+        String description = tfDescription.getText().trim().replaceAll("\\s+", " ");
+        Integer duration = (Integer) sDuration.getValue();
+        ServiceCategory category = (ServiceCategory) cbCategory.getSelectedItem();
+
+        Service serviceUpdated = controller.update(id, description, duration, category);
+
+        if (serviceUpdated != null) {
+            JOptionPane.showMessageDialog(this, "Serviço atualizado!");
+            clearForm();
+            setEditing(false);
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int row = tbService.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Nenhuma linha selecionada");
+        } else {
+
+            int opt = JOptionPane.showConfirmDialog(
+                    this,
+                    "Tem certeza que deseja excluir este erviço?",
+                    "Confirmar exclusão",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (opt == JOptionPane.YES_OPTION) {
+                controller.delete(row);
+            }
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -273,17 +342,26 @@ public class RegisterService extends javax.swing.JDialog {
     }
 
     private void clearForm() {
+        tfId.setText("");
         tfDescription.setText("");
         sDuration.setValue(60);
         cbCategory.setSelectedIndex(-1);
         tfDescription.requestFocus();
     }
 
+    private void setEditing(boolean editing) {
+        btnSave.setEnabled(editing);
+        btnDelete.setEnabled(!editing);
+        btnRegister.setEnabled(!editing);
+        btnCancel.setEnabled(editing);
+        tfDescription.requestFocus();
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
-    private javax.swing.JButton btnExit;
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox<br.edu.ifpr.model.entity.ServiceCategory> cbCategory;
