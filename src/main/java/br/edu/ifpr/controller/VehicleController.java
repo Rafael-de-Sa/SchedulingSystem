@@ -6,6 +6,7 @@ package br.edu.ifpr.controller;
 
 import br.edu.ifpr.dao.VehicleDAO;
 import br.edu.ifpr.model.entity.Vehicle;
+import br.edu.ifpr.view.tablemodel.VehicleTableModel;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -15,16 +16,25 @@ import java.util.regex.Pattern;
  * @author rafae
  */
 public class VehicleController {
-
+    
+    private VehicleTableModel vehicleTableModel;
+    
+    public VehicleController() {
+    }
+    
+    public VehicleController(VehicleTableModel vehicleTableModel) {
+        this.vehicleTableModel = vehicleTableModel;
+    }
+    
     private static final Pattern PLATE_MERCOSUL = Pattern.compile("^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$");
     private static final Pattern PLATE_ANTIGA = Pattern.compile("^[A-Z]{3}[0-9]{4}$");
     private static final int MAX_MODEL_LEN = 30;
-
+    
     private String normalizePlate(String plate) {
         return plate == null ? ""
                 : plate.replace("-", "").replace(" ", "").toUpperCase(Locale.ROOT);
     }
-
+    
     private void validate(String licensePlate, String model) {
         String plate = normalizePlate(licensePlate);
         if (plate.isEmpty()) {
@@ -40,11 +50,11 @@ public class VehicleController {
             throw new ValidationException("Modelo não pode exceder " + MAX_MODEL_LEN + " caracteres.");
         }
     }
-
+    
     public Vehicle create(String licensePlate, String model) {
         validate(licensePlate, model);
         String normPlate = normalizePlate(licensePlate);
-
+        
         VehicleDAO dao = new VehicleDAO();
         try {
             if (dao.existsByLicensePlate(normPlate)) {
@@ -59,26 +69,28 @@ public class VehicleController {
             dao.close();
         }
     }
-
+    
     public Vehicle update(Integer id, String licensePlate, String model) {
         if (id == null) {
             throw new ValidationException("ID inválido.");
         }
-        validate(licensePlate, model);
+        
         String normPlate = normalizePlate(licensePlate);
-
+        
+        validate(normPlate, model);
+        
         VehicleDAO dao = new VehicleDAO();
         try {
             Vehicle v = dao.retrieve(id);
             if (v == null) {
                 throw new ValidationException("Veículo não encontrado.");
             }
-
+            
             boolean mudouPlaca = !normPlate.equalsIgnoreCase(normalizePlate(v.getLicensePlate()));
             if (mudouPlaca && dao.existsByLicensePlate(normPlate)) {
                 throw new ValidationException("Já existe um veículo cadastrado com essa placa.");
             }
-
+            
             v.setLicensePlate(normPlate);
             v.setModel(model.trim());
             dao.update(v);
@@ -87,23 +99,22 @@ public class VehicleController {
             dao.close();
         }
     }
-
-    public void delete(Integer id) {
-        if (id == null) {
-            throw new ValidationException("ID inválido.");
-        }
+    
+    public void delete(Integer row) {
+        Vehicle vehicle = vehicleTableModel.get(row);
         VehicleDAO dao = new VehicleDAO();
+        
         try {
-            Vehicle v = dao.retrieve(id);
-            if (v == null) {
+            if (vehicle == null) {
                 throw new ValidationException("Veículo não encontrado.");
             }
-            dao.delete(v);
+            dao.delete(vehicle);
+            vehicleTableModel.remove(row);
         } finally {
             dao.close();
         }
     }
-
+    
     public Vehicle findById(Integer id) {
         if (id == null) {
             return null;
@@ -115,7 +126,7 @@ public class VehicleController {
             dao.close();
         }
     }
-
+    
     public List<Vehicle> findAll() {
         VehicleDAO dao = new VehicleDAO();
         try {
@@ -123,5 +134,9 @@ public class VehicleController {
         } finally {
             dao.close();
         }
+    }
+    
+    public Vehicle vehicleRetrieve(Integer row) {
+        return vehicleTableModel.get(row);
     }
 }

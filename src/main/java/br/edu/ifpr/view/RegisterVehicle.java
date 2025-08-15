@@ -6,6 +6,8 @@ package br.edu.ifpr.view;
 
 import br.edu.ifpr.controller.ValidationException;
 import br.edu.ifpr.controller.VehicleController;
+import br.edu.ifpr.model.entity.Vehicle;
+import br.edu.ifpr.view.tablemodel.VehicleTableModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,7 +16,8 @@ import javax.swing.JOptionPane;
  */
 public class RegisterVehicle extends javax.swing.JDialog {
 
-    private final VehicleController controller = new VehicleController();
+    private VehicleTableModel vehicleTableModel = new VehicleTableModel();
+    private VehicleController controller = new VehicleController(vehicleTableModel);
 
     /**
      * Creates new form RegisterVehicle
@@ -23,6 +26,10 @@ public class RegisterVehicle extends javax.swing.JDialog {
 
         super(parent, modal);
         initComponents();
+        tbVehicle.setModel(vehicleTableModel);
+
+        vehicleTableModel.setData(controller.findAll());
+
     }
 
     /**
@@ -39,7 +46,7 @@ public class RegisterVehicle extends javax.swing.JDialog {
         lModel = new javax.swing.JLabel();
         tfModel = new javax.swing.JTextField();
         btnRegister = new javax.swing.JButton();
-        btnExit = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
         tfId = new javax.swing.JTextField();
         lId = new javax.swing.JLabel();
         btnEdit = new javax.swing.JButton();
@@ -62,10 +69,11 @@ public class RegisterVehicle extends javax.swing.JDialog {
             }
         });
 
-        btnExit.setText("Sair");
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
+        btnCancel.setText("Cancelar");
+        btnCancel.setEnabled(false);
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
+                btnCancelActionPerformed(evt);
             }
         });
 
@@ -74,6 +82,11 @@ public class RegisterVehicle extends javax.swing.JDialog {
         lId.setText("ID:");
 
         btnEdit.setText("Editar");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         btnSave.setText("Salvar");
         btnSave.setEnabled(false);
@@ -84,6 +97,11 @@ public class RegisterVehicle extends javax.swing.JDialog {
         });
 
         btnDelete.setText("Excluir");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         tbVehicle.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -106,33 +124,35 @@ public class RegisterVehicle extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(spVehicle)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEdit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSave)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDelete)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExit))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lLicensePlate, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lLicensePlate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tfLicensePlate, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lModel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfModel))
+                        .addComponent(tfModel, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lId)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnRegister)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lId)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnDelete, btnEdit, btnExit, btnRegister, btnSave});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCancel, btnDelete, btnEdit, btnRegister, btnSave});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,7 +170,7 @@ public class RegisterVehicle extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegister)
-                    .addComponent(btnExit)
+                    .addComponent(btnCancel)
                     .addComponent(btnEdit)
                     .addComponent(btnSave)
                     .addComponent(btnDelete))
@@ -159,32 +179,27 @@ public class RegisterVehicle extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnDelete, btnEdit, btnExit, btnRegister, btnSave});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCancel, btnDelete, btnEdit, btnRegister, btnSave});
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-        // TODO add your handling code here:
-        String plate = tfLicensePlate.getText();
-        String model = tfModel.getText();
+        String plate = tfLicensePlate.getText().trim().replaceAll("\\s+", " ");
+        String model = tfModel.getText().trim().replaceAll("\\s+", " ");
 
         try {
             var saved = controller.create(plate, model);
 
-            int opt = JOptionPane.showConfirmDialog(
-                    this,
-                    "Veículo salvo com sucesso (id: " + saved.getId() + ").\nDeseja cadastrar outro?",
-                    "Sucesso",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-
-            if (opt == JOptionPane.YES_OPTION) {
+            if (saved != null) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Veículo salvo com sucesso (id: " + saved.getId() + ")");
                 clearForm();
+                vehicleTableModel.add(saved);
             } else {
-                dispose();
+                JOptionPane.showMessageDialog(this, "Erro ao cadastrar Veículo", "Erro", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (ValidationException ve) {
@@ -197,14 +212,62 @@ public class RegisterVehicle extends javax.swing.JDialog {
 
     }//GEN-LAST:event_btnRegisterActionPerformed
 
-    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        // TODO add your handling code here:
-        dispose();
-    }//GEN-LAST:event_btnExitActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        clearForm();
+        setEditing(false);
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // TODO add your handling code here:
+        Integer id = Integer.parseInt(tfId.getText());
+        String licensePlate = tfLicensePlate.getText().trim().replaceAll("\\s+", " ");
+        String model = tfModel.getText().trim().replaceAll("\\s+", " ");
+
+        try {
+            Vehicle v = controller.update(id, licensePlate, model);
+            JOptionPane.showMessageDialog(this, "Veículo atualizado!");
+            this.vehicleTableModel.updateRow(v);
+            clearForm();
+            setEditing(false);
+        } catch (ValidationException ve) {
+            JOptionPane.showMessageDialog(this, ve.getMessage(), "Validação", JOptionPane.WARNING_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        if (tbVehicle.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(null, "Nenhuma linha selecionada!");
+        } else {
+            Vehicle vehicle = controller.vehicleRetrieve(tbVehicle.getSelectedRow());
+            this.tfId.setText(String.valueOf(vehicle.getId()));
+            this.tfLicensePlate.setText(vehicle.getLicensePlate());
+            this.tfModel.setText(vehicle.getModel());
+            setEditing(true);
+        }
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int row = tbVehicle.getSelectedRow();
+
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Nenhuma linha selecionada");
+        } else {
+
+            int opt = JOptionPane.showConfirmDialog(
+                    this,
+                    "Tem certeza que deseja excluir este veículo?",
+                    "Confirmar exclusão",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (opt == JOptionPane.YES_OPTION) {
+                controller.delete(row);
+            }
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -251,13 +314,21 @@ public class RegisterVehicle extends javax.swing.JDialog {
     private void clearForm() {
         tfModel.setText("");
         tfLicensePlate.setText("");
-        tfModel.requestFocus();
+        tfLicensePlate.requestFocus();
+    }
+
+    private void setEditing(boolean editing) {
+        btnSave.setEnabled(editing);
+        btnDelete.setEnabled(!editing);
+        btnRegister.setEnabled(!editing);
+        btnCancel.setEnabled(editing);
+        tfLicensePlate.requestFocus();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
-    private javax.swing.JButton btnExit;
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnSave;
     private javax.swing.JLabel lId;

@@ -4,40 +4,35 @@
  */
 package br.edu.ifpr.view.tablemodel;
 
-import br.edu.ifpr.model.entity.Workshop;
+import br.edu.ifpr.model.entity.Vehicle;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 /**
  *
- * @author Aluno
+ * @author rafael
  */
-public class WorkshopTableModel extends AbstractTableModel {
+public class VehicleTableModel extends AbstractTableModel {
 
-    private List<Workshop> data = new LinkedList<Workshop>();
+    private List<Vehicle> data = new LinkedList<Vehicle>();
 
-    private String[] columns = {"ID", "Nome", "Vagas"};
+    private String[] columns = {"ID", "Placa", "Modelo"};
 
-    public WorkshopTableModel() {
+    public VehicleTableModel() {
     }
 
-    public List<Workshop> getData() {
-        return data;
-    }
-
-    public void setData(List<Workshop> data) {
+    public void setData(List<Vehicle> data) {
         this.data = data;
         this.fireTableDataChanged();
     }
 
-    public Workshop get(int row) {
+    public Vehicle get(int row) {
         return data.get(row);
     }
 
-    public void add(Workshop a) {
-        this.data.add(a);
+    public void add(Vehicle v) {
+        this.data.add(v);
         this.fireTableDataChanged();
     }
 
@@ -46,23 +41,23 @@ public class WorkshopTableModel extends AbstractTableModel {
         this.fireTableDataChanged();
     }
 
-    public int getRowIndexById(Integer workshopId) {
-        if (workshopId == null) {
+    public int getRowIndexById(Integer vehicleId) {
+        if (vehicleId == null) {
             return -1;
         }
         for (int i = 0; i < data.size(); i++) {
             Integer id = data.get(i).getId();
-            if (workshopId.equals(id)) {
+            if (vehicleId.equals(id)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public void updateRow(Workshop workshop) {
-        int row = getRowIndexById(workshop.getId());
-        this.data.set(row, workshop);
-        fireTableRowsUpdated(row, row);
+    public void updateRow(Vehicle vehicle) {
+        int row = getRowIndexById(vehicle.getId());
+        this.data.set(row, vehicle);
+        this.fireTableDataChanged();
     }
 
     @Override
@@ -77,23 +72,23 @@ public class WorkshopTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Workshop workshop = data.get(rowIndex);
+        Vehicle vehicle = data.get(rowIndex);
 
         switch (columnIndex) {
             case 0:
-                return workshop.getId();
+                return vehicle.getId();
             case 1:
-                return workshop.getName();
+                return vehicle.getLicensePlate();
             case 2:
-                return workshop.getVacanciesDay();
+                return vehicle.getModel();
             default:
                 return null;
         }
-
     }
 
     @Override
     public String getColumnName(int column) {
         return columns[column];
     }
+
 }
