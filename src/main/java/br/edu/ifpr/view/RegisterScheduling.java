@@ -17,6 +17,9 @@ import br.edu.ifpr.model.entity.Service;
 
 import br.edu.ifpr.controller.SchedulingController;
 import br.edu.ifpr.controller.ValidationException;
+import br.edu.ifpr.model.entity.Scheduling;
+import br.edu.ifpr.model.entity.SchedulingStatus;
+import br.edu.ifpr.view.tablemodel.SchedulingTableModel;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -29,7 +32,8 @@ import java.time.*;
  */
 public class RegisterScheduling extends javax.swing.JDialog {
 
-    private final SchedulingController controller = new SchedulingController();
+    private SchedulingTableModel schedulingTableModel = new SchedulingTableModel();
+    private SchedulingController controller = new SchedulingController(schedulingTableModel);
 
     /**
      * Creates new form RegisterScheduling
@@ -39,6 +43,10 @@ public class RegisterScheduling extends javax.swing.JDialog {
         initComponents();
         loadCombos();
         configureSpinners();
+
+        tbScheduling.setModel(schedulingTableModel);
+
+        schedulingTableModel.setData(controller.findAll());
 
     }
 
@@ -71,6 +79,8 @@ public class RegisterScheduling extends javax.swing.JDialog {
         lId = new javax.swing.JLabel();
         spScheduling = new javax.swing.JScrollPane();
         tbScheduling = new javax.swing.JTable();
+        jLabel6 = new javax.swing.JLabel();
+        cbStatus = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Agendar Serviço");
@@ -104,11 +114,26 @@ public class RegisterScheduling extends javax.swing.JDialog {
         lblEndTime.setText("Término:");
 
         btnEdit.setText("Editar");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         btnSave.setText("Salvar");
         btnSave.setEnabled(false);
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnDelete.setText("Excluir");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         tfId.setEnabled(false);
 
@@ -127,6 +152,10 @@ public class RegisterScheduling extends javax.swing.JDialog {
         ));
         spScheduling.setViewportView(tbScheduling);
 
+        jLabel6.setText("Status:");
+
+        cbStatus.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -134,36 +163,14 @@ public class RegisterScheduling extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spScheduling)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbWorkshop, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbService, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(3, 3, 3)
                         .addComponent(cbVehicle, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lId)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnRegister)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnEdit)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnSave)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnDelete)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnCancel)))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(lblEndTime, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -174,7 +181,35 @@ public class RegisterScheduling extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sTime, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(sTime, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lId)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbService, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(btnRegister)
+                                .addGap(25, 25, 25)
+                                .addComponent(btnEdit)
+                                .addGap(25, 25, 25)
+                                .addComponent(btnSave)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(25, 25, 25)
+                                .addComponent(btnDelete)
+                                .addGap(25, 25, 25)
+                                .addComponent(btnCancel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(spScheduling, javax.swing.GroupLayout.PREFERRED_SIZE, 737, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -198,7 +233,9 @@ public class RegisterScheduling extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(cbService, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbService, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -226,8 +263,8 @@ public class RegisterScheduling extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        // TODO add your handling code here:
-        dispose();
+        clearForm();
+        setEditing(false);
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
@@ -236,20 +273,16 @@ public class RegisterScheduling extends javax.swing.JDialog {
         var w = (br.edu.ifpr.model.entity.Workshop) cbWorkshop.getSelectedItem();
         var v = (br.edu.ifpr.model.entity.Vehicle) cbVehicle.getSelectedItem();
         var s = (br.edu.ifpr.model.entity.Service) cbService.getSelectedItem();
+
         var start = getSelectedDateTime();
         try {
             var saved = controller.create(w, v, s, start);
-            int opt = javax.swing.JOptionPane.showConfirmDialog(
-                    this,
-                    "Agendamento salvo (id: " + saved.getId() + ").\nCadastrar outro?",
-                    "Sucesso",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.INFORMATION_MESSAGE
-            );
-            if (opt == javax.swing.JOptionPane.YES_OPTION) {
+            if (saved != null) {
+                JOptionPane.showMessageDialog(this, "Serviço sucesso (id: " + saved.getId() + ")");
                 clearForm();
+                schedulingTableModel.add(saved);
             } else {
-                dispose();
+                JOptionPane.showMessageDialog(this, "Erro ao cadastrar Serviço", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         } catch (br.edu.ifpr.controller.ValidationException ve) {
             javax.swing.JOptionPane.showMessageDialog(this, ve.getMessage(), "Validação", javax.swing.JOptionPane.WARNING_MESSAGE);
@@ -257,6 +290,93 @@ public class RegisterScheduling extends javax.swing.JDialog {
             javax.swing.JOptionPane.showMessageDialog(this, "Erro ao salvar: " + ex.getMessage(), "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        if (tbScheduling.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(null, "Nenhuma linha selecionada!");
+        } else {
+            Scheduling scheduling = controller.schedulingRetrieve(tbScheduling.getSelectedRow());
+
+            this.tfId.setText(String.valueOf(scheduling.getId()));
+            this.cbWorkshop.setSelectedItem(scheduling.getWorkshop());
+            this.cbService.setSelectedItem(scheduling.getService());
+            this.cbVehicle.setSelectedItem(scheduling.getVehicle());
+            this.cbStatus.setSelectedItem(scheduling.getStatus());
+
+            LocalDateTime start = scheduling.getStartTime();
+            ZoneId z = ZoneId.systemDefault();
+            Date data = Date.from(start.toLocalDate().atStartOfDay(z).toInstant());
+            Date hora = Date.from(start.atZone(z).toInstant());
+
+            sDate.setValue(data);
+            sTime.setValue(hora);
+
+            setEditing(true);
+
+        }
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        Integer id = Integer.parseInt(tfId.getText());
+
+        try {
+            id = Integer.parseInt(tfId.getText().trim());
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(this, "ID inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        var w = (br.edu.ifpr.model.entity.Workshop) cbWorkshop.getSelectedItem();
+        var v = (br.edu.ifpr.model.entity.Vehicle) cbVehicle.getSelectedItem();
+        var s = (br.edu.ifpr.model.entity.Service) cbService.getSelectedItem();
+
+        if (w == null || v == null || s == null) {
+            JOptionPane.showMessageDialog(this, "Oficina, veículo e serviço são obrigatórios.", "Validação", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        var start = getSelectedDateTime();
+
+        try {
+            var updated = controller.update(id, w, v, s, start);
+
+            if (updated != null) {
+                JOptionPane.showMessageDialog(this, "Agendamento atualizado!");
+
+                schedulingTableModel.setData(controller.findAll());
+
+                clearForm();
+                setEditing(false);
+            } else {
+                JOptionPane.showMessageDialog(this, "Erro ao atualizar", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (br.edu.ifpr.controller.ValidationException ve) {
+            JOptionPane.showMessageDialog(this, ve.getMessage(), "Validação", JOptionPane.WARNING_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int row = tbScheduling.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Nenhuma linha selecionada");
+        } else {
+
+            int opt = JOptionPane.showConfirmDialog(
+                    this,
+                    "Tem certeza que deseja excluir este agendamento?",
+                    "Confirmar exclusão",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (opt == JOptionPane.YES_OPTION) {
+                controller.delete(row);
+            }
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -319,6 +439,9 @@ public class RegisterScheduling extends javax.swing.JDialog {
         WorkshopDAO wdao = new WorkshopDAO();
         VehicleDAO vdao = new VehicleDAO();
         ServiceDAO sdao = new ServiceDAO();
+
+        cbStatus.setModel(new DefaultComboBoxModel<>(SchedulingStatus.values()));
+        cbStatus.setSelectedItem(SchedulingStatus.AGENDADO);
 
         try {
 
@@ -411,13 +534,24 @@ public class RegisterScheduling extends javax.swing.JDialog {
     }
 
     private void clearForm() {
+        tfId.setText("");
         cbWorkshop.setSelectedIndex(-1);
         cbVehicle.setSelectedIndex(-1);
         cbService.setSelectedIndex(-1);
-        configureSpinners();     // volta para 08:00 de hoje
+        cbStatus.setSelectedIndex(-1);
+        configureSpinners();
         updateEndTimePreview();
         cbWorkshop.requestFocus();
     }
+
+    private void setEditing(boolean editing) {
+        btnSave.setEnabled(editing);
+        btnDelete.setEnabled(!editing);
+        btnRegister.setEnabled(!editing);
+        btnCancel.setEnabled(editing);
+        cbWorkshop.requestFocus();
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
@@ -426,6 +560,7 @@ public class RegisterScheduling extends javax.swing.JDialog {
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox<br.edu.ifpr.model.entity.Service> cbService;
+    private javax.swing.JComboBox<br.edu.ifpr.model.entity.SchedulingStatus> cbStatus;
     private javax.swing.JComboBox<br.edu.ifpr.model.entity.Vehicle> cbVehicle;
     private javax.swing.JComboBox<br.edu.ifpr.model.entity.Workshop> cbWorkshop;
     private javax.swing.JLabel jLabel1;
@@ -433,6 +568,7 @@ public class RegisterScheduling extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel lId;
     private javax.swing.JLabel lblEndTime;
     private javax.swing.JSpinner sDate;

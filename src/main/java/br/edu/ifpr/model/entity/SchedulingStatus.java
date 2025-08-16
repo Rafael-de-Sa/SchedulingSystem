@@ -9,5 +9,22 @@ package br.edu.ifpr.model.entity;
  * @author rafae
  */
 public enum SchedulingStatus {
-    AGENDADO, CANCELADO, COMPLETO
+    AGENDADO("Agendado"),
+    CANCELADO("Cancelado"),
+    COMPLETO("Completo");
+
+    private final String label;
+
+    SchedulingStatus(String label) {
+        this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    @Override
+    public String toString() {
+        return label;
+    }
 }

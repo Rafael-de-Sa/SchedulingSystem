@@ -9,6 +9,7 @@ import br.edu.ifpr.model.entity.Scheduling;
 import br.edu.ifpr.model.entity.Service;
 import br.edu.ifpr.model.entity.Vehicle;
 import br.edu.ifpr.model.entity.Workshop;
+import br.edu.ifpr.view.tablemodel.SchedulingTableModel;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -22,6 +23,12 @@ import java.util.Objects;
  * @author rafae
  */
 public class SchedulingController {
+
+    private SchedulingTableModel schedulingTableModel;
+
+    public SchedulingController(SchedulingTableModel schedulingTableModel) {
+        this.schedulingTableModel = schedulingTableModel;
+    }
 
     private static final LocalTime OPEN = LocalTime.of(8, 0);
     private static final LocalTime CLOSE = LocalTime.of(18, 0);
@@ -106,27 +113,21 @@ public class SchedulingController {
         }
     }
 
-    public void delete(Integer id) {
-        if (id == null) {
-            throw new ValidationException("ID do agendamento inválido.");
-        }
+    public void delete(Integer row) {
 
+        Scheduling scheduling = schedulingTableModel.get(row);
         SchedulingDAO dao = new SchedulingDAO();
+
         try {
-            Scheduling current = dao.retrieve(id);
-            if (current == null) {
-                throw new ValidationException("Agendamento não encontrado.");
+            if (scheduling == null) {
+                throw new ValidationException("Oficina não encontrada.");
             }
-
-            // bloqueio de cancelamento < 24h
-            if (blockedLessThan24h(current.getStartTime())) {
-                throw new ValidationException("Não é possível cancelar com menos de 24 horas de antecedência.");
-            }
-
-            dao.delete(current);
+            dao.delete(scheduling);
+            schedulingTableModel.remove(row);
         } finally {
             dao.close();
         }
+
     }
 
     private void validateInputs(Workshop w, Vehicle v, Service s, LocalDateTime start) {
@@ -188,5 +189,9 @@ public class SchedulingController {
         } finally {
             dao.close();
         }
+    }
+
+    public Scheduling schedulingRetrieve(Integer row) {
+        return schedulingTableModel.get(row);
     }
 }

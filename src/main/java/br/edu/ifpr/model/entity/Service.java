@@ -78,5 +78,22 @@ public class Service {
     public void setCategory(ServiceCategory category) {
         this.category = category;
     }
+    
+     @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || org.hibernate.Hibernate.getClass(this) != org.hibernate.Hibernate.getClass(o)) {
+            return false;
+        }
+        Service service = (Service) o;
+        return id == service.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
 
 }

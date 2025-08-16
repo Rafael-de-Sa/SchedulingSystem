@@ -66,4 +66,21 @@ public class Vehicle {
         this.model = model;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || org.hibernate.Hibernate.getClass(this) != org.hibernate.Hibernate.getClass(o)) {
+            return false;
+        }
+        Vehicle vehicle = (Vehicle) o;
+        return id == vehicle.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
+
 }
